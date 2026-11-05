@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Hermes Voice — From Voice to Video</title>
+  <style>
+    :root {
+      --ink: #19243b;
+      --muted: #63718a;
+      --line: #cbd5e5;
+      --paper: #f5f7fb;
+      --white: #fff;
+      --blue: #5365e8;
+      --cyan: #27a9dd;
+      --green: #0caf83;
+      --red: #ee6378;
+      --gold: #f3b64b;
+      --shadow: 0 18px 50px rgba(30, 48, 92, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 15% 6%, rgba(89, 112, 245, .11), transparent 32rem),
+        radial-gradient(ellipse at 92% 22%, rgba(40, 181, 194, .10), transparent 28rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:20px 0; }
+    .brand { display:flex; gap:11px; align-items:center; font-weight:800; letter-spacing:-.03em; }
+    .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:13px; color:white; background:linear-gradient(145deg,#3d72f5,#584ed2); box-shadow:0 8px 18px #5365e844; font-size:20px; }
+    .brand small { display:block; color:var(--muted); font-size:11px; font-weight:600; letter-spacing:.04em; }
+    .nav { display:flex; gap:22px; font-size:13px; color:var(--muted); }
+    .nav a { text-decoration:none; }
+    .nav a:hover { color:var(--blue); }
+    .hero { padding:58px 0 38px; display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; padding:7px 11px; background:#fff; border:1px solid #e3e9f3; border-radius:999px; color:#4658cf; font-size:12px; font-weight:750; box-shadow:0 4px 12px #23365b0b; }
+    .pulse { width:8px; height:8px; background:var(--green); border-radius:100%; box-shadow:0 0 0 4px #0caf831f; }
+    h1 { max-width:680px; margin:17px 0 14px; font-size:clamp(38px,6vw,66px); line-height:1.02; letter-spacing:-.055em; }
+    .gradient-text { color:transparent; background:linear-gradient(90deg,#5264e8,#149ec2); background-clip:text; }
+    .lead { max-width:590px; margin:0; color:var(--muted); font-size:17px; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:25px; }
+    .button { border:0; border-radius:11px; padding:12px 17px; font:inherit; font-weight:750; cursor:pointer; text-decoration:none; transition:transform .18s, box-shadow .18s; }
+    .button:hover { transform:translateY(-2px); }
+    .primary { color:white; background:linear-gradient(120deg,#5266eb,#4657d2); box-shadow:0 10px 22px #5365e833; }
+    .secondary { color:#34415a; background:white; border:1px solid #dfe5ef; }
+    .hero-card { position:relative; padding:23px; border:1px solid #e3e9f3; border-radius:24px; background:rgba(255,255,255,.76); box-shadow:var(--shadow); overflow:hidden; }
+    .hero-card:before { content:""; position:absolute; width:220px;height:220px;right:-90px;top:-115px;border-radius:50%;background:#5265e81a; }
+    .hero-card-head { position:relative; display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+    .hero-card-head strong { font-size:14px; }
+    .tag { padding:5px 9px; border-radius:999px; color:#087d61; background:#e4f8f1; font-size:11px; font-weight:800; }
+    .mini-flow { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:8px; align-items:center; }
+    .mini-node { min-height:82px; padding:13px 10px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border:1px solid #e5eaf2; border-radius:13px; background:#fff; font-size:12px; font-weight:750; }
+    .mini-node span { display:block; margin-bottom:5px; font-size:19px; }
+    .mini-arrow { color:#8996ac; font-size:19px; }
+    .status-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:15px; }
+    .status { padding:12px; border-radius:12px; background:#f7f9fd; color:var(--muted); font-size:11px; }
+    .status b { display:block; color:var(--ink); font-size:12px; margin-bottom:3px; }
+    .status .ok { color:#078567; }
+    .status .partial { color:#a66b08; }
+    section { padding:60px 0; }
+    .section-heading { max-width:680px; margin:0 auto 30px; text-align:center; }
+    .section-heading .kicker { color:var(--blue); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.16em; }
+    h2 { margin:7px 0 8px; font-size:clamp(27px,4vw,40px); line-height:1.14; letter-spacing:-.04em; }
+    .section-heading p { color:var(--muted); margin:0; }
+    .workflow-shell { padding:32px 20px 27px; border:1px solid #e1e7f0; border-radius:24px; background:rgba(255,255,255,.78); box-shadow:var(--shadow); }
+    .flow { width:min(760px,100%); margin:auto; display:flex; flex-direction:column; align-items:center; position:relative; isolation:isolate; }
+    .connectors { position:absolute; inset:0; z-index:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+    .connectors path { fill:none; stroke:#30343b; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .flow > *:not(.connectors) { position:relative; z-index:1; }
+    .node { position:relative; z-index:1; max-width:100%; padding:13px 18px; text-align:center; border-radius:11px; font-size:13px; line-height:1.35; box-shadow:0 6px 14px #2638600c; }
+    .node b { display:block; font-size:14px; }
+    .node small { display:block; margin-top:3px; opacity:.84; font-size:11px; }
+    .start, .deliver { color:white; background:var(--green); font-weight:850; letter-spacing:.08em; }
+    .process { color:white; background:linear-gradient(125deg,#5b67e9,#5960d2); }
+    .decision { width:148px; height:148px; display:grid; place-items:center; padding:28px; transform:rotate(45deg); border:1.5px solid var(--cyan); border-radius:8px; background:white; color:#218fc0; box-shadow:none; }
+    .decision > span { display:block; transform:rotate(-45deg); font-weight:750; font-size:13px; }
+    .down { height:31px; width:2px; background:transparent; position:relative; }
+    .down:after { display:none; }
+    .branches, .review-row { display:grid; grid-template-columns:1fr 1fr; position:relative; padding:24px 15px 18px; }
+    .branches { width:min(590px,100%); gap:44px; }
+    .branches:before, .review-row:before, .branch:before, .branch:after { display:none; }
+    .branch { min-width:0; min-height:40px; display:flex; justify-content:center; align-items:flex-start; text-align:center; position:relative; }
+    .branch-choice { min-height:40px; display:flex; align-items:center; justify-content:center; padding:8px 12px; border:1px solid; border-radius:8px; font-size:12px; line-height:1.3; font-weight:800; background:#fff; }
+    .yes { color:#078567; border-color:#72d9ba; background:#e7f9f3; }
+    .no { color:#d94d69; border-color:#f4a1af; background:#fff7f8; }
+    .merge { width:min(590px,100%); height:29px; position:relative; background:transparent; }
+    .merge:after { display:none; }
+    .tool-row { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; width:min(690px,100%); margin:3px 0 10px; }
+    .tool { padding:15px 12px; border:1px solid #e3e8f1; border-radius:13px; background:#fff; text-align:center; font-size:12px; color:var(--muted); }
+    .tool b { display:block; color:var(--ink); margin-bottom:4px; }
+    .tool i { display:block; font-size:20px; font-style:normal; margin-bottom:3px; }
+    .review-row { width:min(610px,100%); gap:46px; align-items:start; }
+    .review-row .branch-choice { margin-top:3px; }
+    .review-row .loop-note { position:absolute; top:calc(100% + 6px); left:0; width:100%; font-size:11px; color:var(--muted); }
+    .flow-caption { margin-top:22px; color:var(--muted); text-align:center; font-size:12px; }
+    .creative-brief { position:relative; overflow:hidden; padding:28px; border:1px solid #dce6f2; border-radius:22px; color:var(--ink); background:radial-gradient(circle at 100% 0%,#eaf8ff 0,transparent 38%),linear-gradient(145deg,#fff,#fbfdff 72%,#f5f9ff); box-shadow:var(--shadow); }
+    .creative-brief:after { content:""; position:absolute; right:-65px; bottom:-110px; width:260px; height:260px; border:1px solid rgba(50,160,210,.17); border-radius:50%; box-shadow:0 0 0 24px rgba(50,160,210,.045),0 0 0 52px rgba(50,160,210,.03); pointer-events:none; }
+    .brief-heading { position:relative; z-index:1; display:flex; align-items:center; gap:12px; margin-bottom:17px; }
+    .brief-heading .spark { display:grid; place-items:center; width:38px; height:38px; flex:none; border:1px solid #bfe9f7; border-radius:12px; color:#178db7; background:#e9f8ff; font-size:19px; }
+    .brief-heading h2 { margin:0; color:#1e2c46; font-size:clamp(21px,3vw,27px); letter-spacing:-.025em; }
+    .brief-heading p { margin:3px 0 0; color:var(--muted); font-size:12px; }
+    .brief-list { position:relative; z-index:1; margin:0; padding:0; list-style:none; counter-reset:brief; }
+    .brief-list li { counter-increment:brief; display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start; padding:12px 0; border-top:1px solid #e5ebf3; color:#34415a; font-size:13px; }
+    .brief-list li:first-child { border-top:0; }
+    .brief-list li:before { content:counter(brief); display:grid; place-items:center; width:29px; height:29px; border-radius:50%; color:white; background:linear-gradient(140deg,#36bce8,#4d77e7); font-size:12px; font-weight:900; }
+    .priority { display:inline-block; vertical-align:1px; margin-right:7px; padding:3px 8px; border-radius:999px; color:#d84d62; background:#fff0f2; font-size:9px; font-weight:900; letter-spacing:.06em; }
+    .priority.should { color:#946500; background:#fff5d9; }
+    .brief-list strong { color:#1685ad; }
+    .brief-note { position:relative; z-index:1; margin:14px 0 0; padding:11px 13px; border-left:2px solid #38add5; border-radius:0 8px 8px 0; color:#52627a; background:#eff9fd; font-size:11px; }
+    .usage-stack { display:grid; gap:16px; }
+    .usage-card { padding:23px 25px; border:1px solid #dfe7f1; border-radius:18px; background:linear-gradient(145deg,#fff,#fbfdff); box-shadow:0 12px 32px rgba(30,48,92,.07); }
+    .usage-card h2 { display:flex; align-items:center; gap:10px; margin:0 0 10px; color:#253657; font-size:22px; letter-spacing:-.025em; }
+    .usage-card h2 span { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; color:#278fb9; background:#eaf8fd; font-size:18px; }
+    .usage-card p { margin:0 0 12px; color:#586780; font-size:13px; }
+    .prompt-box { margin:0 0 13px; padding:15px 17px; border-left:3px solid #35afd7; border-radius:0 11px 11px 0; color:#30425e; background:#eef8fc; font:600 12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .usage-card .usage-foot { margin:0; color:#718099; font-size:12px; }
+    .notes-list { margin:0; padding-left:20px; color:#586780; font-size:12px; }
+    .notes-list li { margin:6px 0; padding-left:2px; }
+    .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .shot { margin:0; overflow:hidden; border:1px solid #e0e6ef; border-radius:17px; background:white; box-shadow:0 10px 28px #2638600c; }
+    .shot img { display:block; width:100%; height:230px; object-fit:cover; object-position:top; background:#e8edf5; }
+    .shot figcaption { padding:14px 15px 16px; }
+    .shot strong { display:block; font-size:13px; margin-bottom:4px; }
+    .shot span { display:block; color:var(--muted); font-size:12px; }
+    .evidence { margin-top:15px; padding:13px 14px; color:#49566e; border-left:3px solid var(--cyan); border-radius:0 10px 10px 0; background:#eef8fc; font-size:12px; }
+    .facts { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+    .fact { padding:19px; border:1px solid #e2e8f0; border-radius:16px; background:white; }
+    .fact .icon { font-size:22px; }
+    .fact h3 { font-size:15px; margin:8px 0 5px; }
+    .fact p { color:var(--muted); font-size:12px; margin:0; }
+    .fact .badge { display:inline-block; margin-top:12px; padding:4px 8px; border-radius:999px; font-size:10px; font-weight:800; background:#f2f4f8; color:#5c6980; }
+    .callout { display:flex; gap:14px; align-items:flex-start; margin-top:20px; padding:17px 19px; border:1px solid #f1dba8; border-radius:15px; background:#fff9e9; color:#75551a; font-size:13px; }
+    .callout b { display:block; color:#62440d; margin-bottom:3px; }
+    .cta { display:flex; align-items:center; justify-content:space-between; gap:22px; padding:25px; border-radius:21px; color:white; background:linear-gradient(120deg,#283d7b,#525ee3); box-shadow:var(--shadow); }
+    .cta h2 { font-size:25px; margin:0 0 5px; }
+    .cta p { margin:0; color:#dbe3ff; font-size:13px; }
+    .cta .button { flex:none; color:#29385f; background:white; }
+    footer { padding:21px 0 34px; border-top:1px solid #dfe6f0; color:var(--muted); font-size:12px; text-align:center; }
+    footer p { margin:5px 0; }
+    #toast { position:fixed; left:50%; bottom:24px; z-index:5; transform:translate(-50%,20px); opacity:0; pointer-events:none; padding:12px 17px; border-radius:12px; color:white; background:#202b43; box-shadow:var(--shadow); transition:.25s; font-size:13px; }
+    #toast.show { opacity:1; transform:translate(-50%,0); }
+    .watermark { position:fixed; right:16px; bottom:12px; z-index:4; padding:7px 11px; border:1px solid rgba(83,101,232,.14); border-radius:999px; color:#53617a; background:rgba(255,255,255,.72); backdrop-filter:blur(8px); font-size:12px; font-weight:800; letter-spacing:.08em; opacity:.78; pointer-events:none; user-select:none; }
+    @media(max-width:760px) {
+      .wrap { width:min(100% - 26px,600px); }
+      .nav { gap:12px; font-size:11px; }
+      .hero { grid-template-columns:1fr; gap:24px; padding-top:36px; }
+      .hero-card { padding:17px; }
+      .status-grid { grid-template-columns:1fr; }
+      section { padding:44px 0; }
+      .workflow-shell { padding:24px 11px; }
+      .branches { gap:14px; padding-inline:4px; }
+      .review-row { gap:14px; padding-inline:4px; }
+      .branch-choice { min-height:48px; padding:7px 8px; font-size:10px; }
+      .tool-row { grid-template-columns:1fr; }
+      .creative-brief { padding:20px 16px; }
+      .brief-list li { font-size:12px; }
+      .usage-card { padding:19px 16px; }
+      .gallery,.facts { grid-template-columns:1fr; }
+      .shot img { height:auto; max-height:440px; object-fit:contain; }
+      .cta { align-items:flex-start; flex-direction:column; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#top" aria-label="Hermes Voice, home"><span class="brand-mark">✦</span><span>Hermes Voice<small>LARK · VOICE · VIDEO</small></span></a>
+    <nav class="nav" aria-label="Main navigation"><a href="#workflow">Workflow</a><a href="#creative-brief">Video brief</a><a href="#how-to-use">How to use</a></nav>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero">
+      <div>
+        <span class="eyebrow"><span class="pulse"></span> PROJECT MAP · HERMES VOICE</span>
+        <h1>From voice messages<br>to <span class="gradient-text">finished video.</span></h1>
+        <p class="lead">A workflow based on your project so far: connect Hermes to Lark, transcribe voice messages, then choose a video path that fits the available tools and budget.</p>
+        <div class="hero-actions"><a class="button primary" href="#workflow">Explore the workflow ↓</a></div>
+      </div>
+      <aside class="hero-card" aria-label="Project overview">
+        <div class="hero-card-head"><strong>Your video project</strong><span class="tag">BRIEF · STORY · PREVIEW</span></div>
+        <div class="mini-flow">
+          <div class="mini-node"><span>💬</span>Lark chat</div><div class="mini-arrow">→</div>
+          <div class="mini-node"><span>🎙️</span>Voice message</div><div class="mini-arrow">→</div>
+          <div class="mini-node"><span>🎬</span>Storyboard</div>
+        </div>
+        <div class="status-grid">
+          <div class="status"><b class="ok">01 · COLLECT</b>Gather the goal, message, and references.</div>
+          <div class="status"><b>02 · PLAN</b>Shape the script and shot sequence.</div>
+          <div class="status"><b>03 · REVIEW</b>Check the preview before delivery.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="workflow" class="wrap">
+      <div class="section-heading"><div class="kicker">Your workflow</div><h2>The Hermes Voice video workflow</h2><p>Start with the goal, confirm what is available, choose a workable path, then review and refine the draft.</p></div>
+      <div class="workflow-shell">
+        <div class="flow">
+          <svg class="connectors" aria-hidden="true" focusable="false"></svg>
+          <div class="node start" id="flow-start">START</div><div class="down"></div>
+          <div class="node process" id="flow-goal"><b>Understand the goal</b><small>Lark bot receives voice messages · transcribes them · helps create a promo or explainer</small></div>
+          <div class="down"></div><div class="node decision" id="flow-requirements"><span>Are the<br>requirements<br>clear?</span></div><div class="down"></div>
+          <div class="branches">
+            <div class="branch"><span class="branch-choice yes" id="requirements-yes">YES · Plan the work</span></div>
+            <div class="branch"><span class="branch-choice no" id="requirements-no">NO · Ask 1–3 quick questions</span></div>
+          </div>
+          <div class="merge"></div>
+          <div class="node process" id="flow-path"><b>Choose a practical path</b><small>Keep it free where possible · do not add credits unless you choose to</small></div>
+          <div class="down"></div>
+          <div class="tool-row" id="flow-tools">
+            <div class="tool"><i>💬</i><b>Lark chat</b>Summaries, Q&amp;A, and requests</div>
+            <div class="tool"><i>🎙️</i><b>Voice message</b>Transcription has worked; check the current quota</div>
+            <div class="tool"><i>🧩</i><b>Animated HTML</b>A free preview can be screen-recorded to MP4</div>
+          </div>
+          <div class="down"></div><div class="node decision" id="flow-backend"><span>Is a video<br>backend<br>available?</span></div><div class="down"></div>
+          <div class="branches">
+            <div class="branch"><span class="branch-choice yes" id="backend-yes">YES · Generate video</span></div>
+            <div class="branch"><span class="branch-choice no" id="backend-no">NO · Build an HTML preview</span></div>
+          </div>
+          <div class="merge"></div>
+          <div class="node process" id="flow-draft"><b>Create a draft</b><small>Set the aspect ratio, message, scene timing, and supporting visuals</small></div>
+          <div class="down"></div><div class="node decision" id="flow-preview"><span>Does the<br>preview<br>look good?</span></div><div class="down"></div>
+          <div class="review-row">
+            <div class="branch"><span class="branch-choice yes" id="preview-yes">YES · Ready to deliver</span></div>
+            <div class="branch"><span class="branch-choice no" id="preview-no">NO · Revise and review</span><div class="loop-note">↶ Loop back to the draft</div></div>
+          </div>
+          <div class="down"></div><div class="node deliver" id="flow-deliver"><b>DELIVER</b><small>HTML preview · or MP4 when a video backend is available</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="creative-brief">
+      <div class="creative-brief">
+        <div class="brief-heading"><span class="spark">✦</span><div><h2>How Hermes Voice should shape your video</h2><p>A creative brief tailored to your vertical serum reference</p></div></div>
+        <ol class="brief-list">
+          <li><div><span class="priority">MUST</span>Confirm the final brief: <strong>9:16 vertical</strong> and <strong>15–20 seconds</strong>.</div></li>
+          <li><div><span class="priority">MUST</span>Use first-person narration only when it reflects your confirmed perspective. Never claim product ownership, use, or testing without your confirmation.</div></li>
+          <li><div><span class="priority">MUST</span>Build a shot plan from your supplied reference and approved or licensed visuals; keep source credits with the project.</div></li>
+          <li><div><span class="priority should">SHOULD</span>Use slow macro pans, soft zooms, serum highlights, and natural pauses. Keep the refined studio mood of your reference without relying on a generic ad template.</div></li>
+          <li><div><span class="priority">MUST</span>Check the selected provider and its price first. Use a free preview path where possible; do not start paid generation without your explicit go-ahead.</div></li>
+          <li><div><span class="priority">MUST</span>Review factual claims, caption readability, image credits, vertical framing, and the agreed duration before delivery.</div></li>
+        </ol>
+        <p class="brief-note">This brief keeps the look personal to your serum reference while respecting your preference to avoid paid tools.</p>
+      </div>
+    </section>
+
+    <section class="wrap" id="how-to-use">
+      <div class="usage-stack">
+        <article class="usage-card">
+          <h2><span>🚀</span>How to use it</h2>
+          <p>Open your private Lark chat with the <strong>Hermes Voice</strong> bot and give it a specific task. For example:</p>
+          <blockquote class="prompt-box">Help me plan a 15-second vertical serum video based on my reference clip. Keep the look elegant and personal, with clear captions. Start with a free HTML preview and do not use a paid video provider.</blockquote>
+          <p class="usage-foot">The video is still a next step: review the preview first. Generating an MP4 requires a working video provider and may involve a charge.</p>
+        </article>
+        <article class="usage-card">
+          <h2><span>⚠️</span>Notes</h2>
+          <ul class="notes-list">
+            <li>The video has not been generated yet; this page describes the Hermes Voice setup and planned workflow.</li>
+            <li>Use visuals you supplied or have permission to use, and keep source credits where required.</li>
+            <li>Free video services may have changing daily limits, resolution caps, or watermarks; check the provider’s current terms.</li>
+            <li>Review the script, product claims, captions, and final video before sharing or submitting it.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+
+    <section class="wrap">
+      <div class="cta"><div><h2>Start with a preview</h2><p>This page runs on its own and needs no libraries or API keys.</p></div><a class="button" href="#workflow">Back to the workflow ↑</a></div>
+    </section>
+  </main>
+  <footer class="wrap"><p>Built with Hermes Agent + Hermes Voice Lark bot · Personal video project profile</p><p>Prepared in English for your Hermes Voice video project</p></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div class="watermark" aria-hidden="true">datkazutari</div>
+  <script>
+    const toast = document.getElementById('toast');
+    const flow = document.querySelector('.flow');
+    const svg = document.querySelector('.connectors');
+
+    function drawConnectors() {
+      if (!flow || !svg) return;
+      const bounds = flow.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      svg.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`);
+      svg.innerHTML = '<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3.5 L0,7 Z" fill="#30343b"></path></marker></defs>';
+
+      const point = (id, anchor) => {
+        const rect = document.getElementById(id).getBoundingClientRect();
+        const x0 = rect.left - bounds.left;
+        const y0 = rect.top - bounds.top;
+        if (anchor === 'decision-left') return { x: x0 + rect.width * .32, y: y0 + rect.height * .70 };
+        if (anchor === 'decision-right') return { x: x0 + rect.width * .68, y: y0 + rect.height * .70 };
+        if (anchor === 'right') return { x: x0 + rect.width, y: y0 + rect.height * .5 };
+        if (anchor === 'left') return { x: x0, y: y0 + rect.height * .5 };
+        if (anchor === 'bottom') return { x: x0 + rect.width * .5, y: y0 + rect.height };
+        return { x: x0 + rect.width * .5, y: y0 };
+      };
+
+      const connect = (from, to, options = {}) => {
+        const start = point(from, options.from || 'bottom');
+        const end = point(to, options.to || 'top');
+        const endOffset = options.to === 'right' || options.to === 'left' ? 4 : 3;
+        if (options.to === 'right') end.x -= endOffset;
+        else if (options.to === 'left') end.x += endOffset;
+        else end.y -= endOffset;
+
+        let d;
+        if (options.loop) {
+          const routeX = Math.max(start.x, end.x) + 70;
+          d = `M ${start.x} ${start.y} C ${routeX} ${start.y}, ${routeX} ${end.y + 115}, ${end.x} ${end.y}`;
+        } else {
+          const dy = end.y - start.y;
+          const bend = Math.max(28, Math.abs(dy) * .42);
+          const direction = Math.sign(end.x - start.x);
+          const c1x = start.x + direction * Math.min(42, Math.abs(end.x - start.x) * .35);
+          const c2x = end.x - direction * Math.min(42, Math.abs(end.x - start.x) * .35);
+          d = `M ${start.x} ${start.y} C ${c1x} ${start.y + bend}, ${c2x} ${end.y - bend}, ${end.x} ${end.y}`;
+        }
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('marker-end', 'url(#arrowhead)');
+        svg.appendChild(path);
+      };
+
+      connect('flow-start', 'flow-goal');
+      connect('flow-goal', 'flow-requirements');
+      connect('flow-requirements', 'requirements-yes', { from: 'decision-left' });
+      connect('flow-requirements', 'requirements-no', { from: 'decision-right' });
+      connect('requirements-yes', 'flow-path');
+      connect('requirements-no', 'flow-path');
+      connect('flow-path', 'flow-tools');
+      connect('flow-tools', 'flow-backend');
+      connect('flow-backend', 'backend-yes', { from: 'decision-left' });
+      connect('flow-backend', 'backend-no', { from: 'decision-right' });
+      connect('backend-yes', 'flow-draft');
+      connect('backend-no', 'flow-draft');
+      connect('flow-draft', 'flow-preview');
+      connect('flow-preview', 'preview-yes', { from: 'decision-left' });
+      connect('flow-preview', 'preview-no', { from: 'decision-right' });
+      connect('preview-yes', 'flow-deliver');
+      connect('preview-no', 'flow-draft', { from: 'right', to: 'right', loop: true });
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => {
+      if (link.classList.contains('primary')) {
+        toast.textContent = 'Opening the Hermes Voice workflow.';
+        toast.classList.add('show');
+        window.setTimeout(() => toast.classList.remove('show'), 1800);
+      }
+    }));
+    window.addEventListener('resize', drawConnectors);
+    if ('ResizeObserver' in window) new ResizeObserver(drawConnectors).observe(flow);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawConnectors);
+    window.requestAnimationFrame(drawConnectors);
+  </script>
+</body>
+</html>
+
+
+
+
